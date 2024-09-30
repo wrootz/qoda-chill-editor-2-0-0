@@ -9,11 +9,12 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '../supabase/supabaseClient';
 
 import CodeMirror from "@uiw/react-codemirror";
-import { autocompletion } from '@codemirror/autocomplete';
-import {linter, Diagnostic} from "@codemirror/lint"
+// import { autocompletion } from '@codemirror/autocomplete';
+import {CompletionContext} from "@codemirror/autocomplete"
 import { javascript } from '@codemirror/lang-javascript';
 import { css } from '@codemirror/lang-css';
 import { html } from '@codemirror/lang-html';
+
 
 // const CodeMirror = dynamic(() => import('react-codemirror'), { ssr: false });
 
