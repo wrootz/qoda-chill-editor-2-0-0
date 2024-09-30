@@ -3,7 +3,8 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation'; // Alterado para usar o novo hook
 import dynamic from 'next/dynamic';
 
 import { supabase } from '../supabase/supabaseClient';
@@ -17,12 +18,12 @@ export default function Editor2() {
   const [cssCode, setCss] = useState('');
   const [jsCode, setJs] = useState('');
 
-  useEffect(() => {
-    const user = supabase.auth.user();
-    if (!user) {
-      router.push('/login');
-    }
-  }, [router]);
+  // useEffect(() => {
+  //   const user = supabase.auth.user();
+  //   if (!user) {
+  //     router.push('/login');
+  //   }
+  // }, [router]);
 
   const handleEditorChange = (value: string, language: string) => {
     if (language === 'html') setHtml(value);
