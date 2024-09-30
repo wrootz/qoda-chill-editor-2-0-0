@@ -3,18 +3,25 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
+// import dynamic from 'next/dynamic';
 // import { useRouter } from 'next/router';
 import { useRouter } from 'next/navigation';
 import { supabase } from '../supabase/supabaseClient';
 
 import CodeMirror from "@uiw/react-codemirror";
+import { autocompletion } from '@codemirror/autocomplete';
+import {linter, Diagnostic} from "@codemirror/lint"
+import { javascript } from '@codemirror/lang-javascript';
+import { css } from '@codemirror/lang-css';
+import { html } from '@codemirror/lang-html';
 
+// const CodeMirror = dynamic(() => import('react-codemirror'), { ssr: false });
 
 export default function EditorPage() {
   const router = useRouter();
-  const [html, setHtml] = useState('');
-  const [css, setCss] = useState('');
-  const [js, setJs] = useState('');
+  const [htmlCode, setHtml] = useState('');
+  const [cssCode, setCss] = useState('');
+  const [jsCode, setJs] = useState('');
 
 //   useEffect(() => {
 //     const user = supabase.auth.user();
@@ -32,21 +39,48 @@ export default function EditorPage() {
       <div style={styles.editorContainer}>
         <div style={styles.editor}>
           <h2>Editor HTML</h2>
-          <CodeMirror value={html} onChange={handleHtmlChange} options={{ mode: 'xml', theme: 'material', lineNumbers: true }} />
+          <CodeMirror
+            value={htmlCode}
+            onChange={handleHtmlChange}
+            options={{
+              mode: 'xml',
+              theme: 'material',
+              lineNumbers: true,
+              extensions: [html(), autocompletion()],
+            }}
+          />
         </div>
         <div style={styles.editor}>
           <h2>Editor CSS</h2>
-          <CodeMirror value={css} onChange={handleCssChange} options={{ mode: 'css', theme: 'material', lineNumbers: true }} />
+          <CodeMirror
+            value={cssCode}
+            onChange={handleCssChange}
+            options={{
+              mode: 'css',
+              theme: 'material',
+              lineNumbers: true,
+              extensions: [css(), autocompletion()],
+            }}
+          />
         </div>
         <div style={styles.editor}>
           <h2>Editor JavaScript</h2>
-          <CodeMirror value={js} onChange={handleJsChange} options={{ mode: 'javascript', theme: 'material', lineNumbers: true }} />
+          <CodeMirror
+            value={jsCode}
+            onChange={handleJsChange}
+            options={{
+              mode: 'javascript',
+              theme: 'material',
+              lineNumbers: true,
+              extensions: [javascript(), autocompletion()],
+            }}
+          />
         </div>
       </div>
       <div style={styles.previewContainer}>
         <h2>Preview</h2>
         <iframe
-          srcDoc={`<!DOCTYPE html><html><head><style>${css}</style></head><body>${html}<script>${js}<\/script></body></html>`}
+          srcDoc={`<!DOCTYPE html><html><head><style>${cssCode}</style></head><body>${htmlCode}<script>${jsCode}<\/script></body></html>`}
           style={styles.preview}
         />
       </div>
