@@ -9,11 +9,44 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '../supabase/supabaseClient';
 
 import CodeMirror from "@uiw/react-codemirror";
-// import { autocompletion } from '@codemirror/autocomplete';
 import {CompletionContext} from "@codemirror/autocomplete"
+import { autocompletion } from '@codemirror/autocomplete'; // Autocomplete core
+import { completionKeymap } from '@codemirror/autocomplete'; // Keyboard shortcuts for autocompletion
+import { keymap } from '@codemirror/view'; // To integrate keymaps with the editor
+
 import { javascript } from '@codemirror/lang-javascript';
 import { css } from '@codemirror/lang-css';
 import { html } from '@codemirror/lang-html';
+
+// https://discuss.codemirror.net/t/how-to-use-codemirror-autocomplete-from-a-react-js-app/2441
+// import 'codemirror/addon/hint/show-hint';
+// import 'codemirror/addon/hint/javascript-hint';
+// import 'codemirror/addon/hint/show-hint.css';
+// import 'codemirror/addon/hint/anyword-hint';
+// import 'codemirror/addon/edit/closebrackets';
+// import 'codemirror/addon/edit/closetag';
+// import 'codemirror/addon/fold/foldcode';
+// import 'codemirror/addon/fold/foldgutter';
+// import 'codemirror/addon/fold/brace-fold';
+// import 'codemirror/addon/fold/comment-fold';
+// import 'codemirror/addon/fold/foldgutter.css';
+
+// options={{
+//     mode: 'javascript',
+//     lineWrapping: true,
+//     smartIndent: true,
+//     lineNumbers: true,
+//     foldGutter: true,
+//     gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+//     autoCloseTags: true,
+//     keyMap: 'sublime',
+//     matchBrackets: true,
+//     autoCloseBrackets: true,
+//     extraKeys: {
+//       'Ctrl-Space': 'autocomplete'
+//     }
+//   }}
+
 
 
 // const CodeMirror = dynamic(() => import('react-codemirror'), { ssr: false });
@@ -35,6 +68,8 @@ export default function EditorPage() {
   const handleCssChange = (value: string) => setCss(value);
   const handleJsChange = (value: string) => setJs(value);
 
+  const basicExtensions = [autocompletion(), keymap.of(completionKeymap)]; // Adding autocomplete and keymaps
+
   return (
     <div style={styles.container}>
       <div style={styles.editorContainer}>
@@ -44,7 +79,8 @@ export default function EditorPage() {
             value={htmlCode}
             onChange={handleHtmlChange}
             options={{
-              mode: 'xml',
+            //   mode: 'xml',
+              mode: 'html',
               theme: 'material',
               lineNumbers: true,
               extensions: [html(), autocompletion()],
@@ -66,7 +102,7 @@ export default function EditorPage() {
         </div>
         <div style={styles.editor}>
           <h2>Editor JavaScript</h2>
-          <CodeMirror
+          {/* <CodeMirror
             value={jsCode}
             onChange={handleJsChange}
             options={{
@@ -75,9 +111,21 @@ export default function EditorPage() {
               lineNumbers: true,
               extensions: [javascript(), autocompletion()],
             }}
+          /> */}
+          <CodeMirror
+            value={jsCode}
+            onChange={handleJsChange}
+            options={{
+                mode: 'javascript',
+              theme: 'material',
+              lineNumbers: true,
+              autocompletion: true,
+              extensions: [javascript(), ...basicExtensions], // Enabling JS with autocompletion
+            }}
           />
         </div>
       </div>
+
       <div style={styles.previewContainer}>
         <h2>Preview</h2>
         <iframe
@@ -85,6 +133,7 @@ export default function EditorPage() {
           style={styles.preview}
         />
       </div>
+
     </div>
   );
 }
